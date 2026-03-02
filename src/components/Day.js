@@ -8,9 +8,9 @@ export default function Day(props) {
   return (
     <>
       <div className="boxDay flex border">
-        <p>{props.day}</p>
-        <img src={createIconUrl()} alt="img" />
-        <p>
+        <p className="day-name">{props.day}</p>
+        <img className="box-icon" src={createIconUrl()} alt="img" />
+        <p className="day-temp">
           {Math.floor(props.max)}°/{Math.floor(props.min)}°
         </p>
       </div>

@@ -1,60 +1,86 @@
 import React, { useState } from "react";
 import "../assets/css/PageHome.css";
 import { useNavigate } from "react-router-dom";
+
 function PageHome(props) {
-  let history = useNavigate();
+  const history = useNavigate();
   const [busqueda, setBusqueda] = useState("");
-  // console.log(busqueda);
+  const [loading, setLoading] = useState(false);
 
   const convertToCoords = async () => {
-    await fetch(
-      `https://api.openweathermap.org/geo/1.0/direct?q=${busqueda},AR&limit=1&appid=e13a4de7d97c9fd3717863271561b6a6`
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        props.setCoords(res);
-      })
-      .catch((error) => console.log(error));
-    console.log("pageHome " + props.coords.lat);
+    if (loading || !busqueda) return;
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `https://api.openweathermap.org/geo/1.0/direct?q=${busqueda}&limit=1&appid=e13a4de7d97c9fd3717863271561b6a6`,
+      ).then((r) => r.json());
+      props.setCoords(res);
+    } catch (error) {
+      console.log("error" + error);
+    }
+    setLoading(false);
   };
 
   return (
-    <div className="container">
-      <div className="row centrado">
-        <div className="col-md-6 centrar">
+    <div className="home-hero">
+      <div className="home-card container">
+        <div className="home-left">
+          <h1>Clima ahora</h1>
+          <p className="muted">
+            Busca la ciudad para ver el pronóstico detallado
+          </p>
+        </div>
+        <div className="home-right">
           <form
-            className="form-inline"
-            onSubmit={() => {
-              convertToCoords();
+            className="search-form"
+            onSubmit={async (e) => {
+              e.preventDefault();
+              await convertToCoords();
               history(`/weather`);
             }}
-            name="Form"
           >
-            <div className="busqueda">
+            <div className="search-input">
+              <svg
+                className="search-icon"
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                aria-hidden
+              >
+                <path
+                  fill="currentColor"
+                  d="M21 21l-4.35-4.35"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                ></path>
+                <circle
+                  cx="11"
+                  cy="11"
+                  r="6"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  fill="none"
+                ></circle>
+              </svg>
               <input
-                name=""
                 type="text"
-                id="buscar"
-                placeholder="Ciudad"
-                value={props.busqueda}
-                onChange={(e) => {
-                  setBusqueda(e.target.value);
-                }}
+                placeholder="Ciudad, país"
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
               />
             </div>
+            <div className="search-actions">
+              <button
+                className="btn btn-primary"
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? "Buscando..." : "Buscar"}
+              </button>
+            </div>
           </form>
-          <div className="actions">
-            <button
-              className="btng"
-              type="submit"
-              onClick={() => {
-                convertToCoords();
-                history(`/weather`);
-              }}
-            >
-              Buscar
-            </button>
-          </div>
         </div>
       </div>
     </div>

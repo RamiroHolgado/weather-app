@@ -1,67 +1,447 @@
-.container {
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
-  height: 50vh;
+:root {
+  --bg1: #0f1724;
+  --bg2: #071029;
+  --card: #0b1b2b;
+  --accent: #61dafb;
+  --muted: rgba(255, 255, 255, 0.7);
 }
 
-.paddTop {
-  padding-top: 10vh;
-}
-
-.border {
-  border: 1px solid #fff;
-  border-radius: 1rem;
-  margin: 2px;
+.weather-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--bg), var(--bg-2));
+  color: var(--fg);
+  padding: 2rem 1rem;
 }
 
 .flex {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-flow: wrap column;
+}
+.border {
+  border-radius: 8px;
 }
 
-/* COMPONENTS */
-
-/* DAY */
-.boxDay {
-  width: 20%;
-}
-.boxDay p {
-  margin: 0;
-  padding: 8px 0px 8px 0px;
+.weather-grid {
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
-/* TODAY */
-.todayBox {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-flow: wrap column;
-}
-.padd {
-  padding: 20px;
+/* Forzar herencia de variables de tema y sobreescribir estilos de Bootstrap (.card) */
+.home-card.card,
+.home-card .card,
+.weather-grid .card {
+  background: var(--card-bg) !important;
+  color: var(--fg) !important;
+  border-color: transparent !important;
 }
 
-.img-container {
-  padding-top: 10px;
-  width: 60%;
+.weather-grid h1,
+.weather-grid h2,
+.weather-grid h3,
+.weather-grid h4,
+.weather-grid h5,
+.weather-grid p,
+.weather-grid span,
+.weather-grid a {
+  color: var(--fg) !important;
+}
+
+.weather-grid .section-title {
+  color: var(--muted) !important;
+}
+
+.weather-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
-/* HOUR */
+/* header cuando está arriba sobre la tarjeta */
+.weather-header.top-header {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  background: transparent;
+  margin-bottom: 1rem;
+}
+.weather-header.top-header .location h2 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+.weather-header.top-header .country {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* botón refrescar tema-aware */
+.btn-refresh {
+  background: var(--card-overlay) !important;
+  color: var(--fg) !important;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+.btn-refresh:hover {
+  filter: brightness(1.05);
+}
+.weather-header .location h2 {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.weather-header .country {
+  margin: 0;
+  color: var(--muted);
+}
+
+.weather-main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.today-card,
+.hours-card,
+.five-days-card {
+  background: var(--card-bg);
+  color: var(--fg);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.18);
+}
+
+/* igualar altura de las 3 secciones en pantallas grandes */
+@media (min-width: 900px) {
+  :root {
+    --card-height: 360px;
+  }
+  .today-card,
+  .hours-card,
+  .five-days-card {
+    height: var(--card-height);
+  }
+  .today-card {
+    display: flex;
+    align-items: center;
+  }
+  .hours-card,
+  .five-days-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  /* Forzar que las secciones ocupen todo el ancho de su columna */
+  .today-card,
+  .hours-card,
+  .five-days-card {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+.today {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.today-left {
+  display: flex;
+  flex-direction: column;
+}
+.temp {
+  font-size: 3.5rem;
+  margin: 0;
+}
+.cond {
+  margin: 4px 0;
+  color: var(--accent);
+  text-transform: capitalize;
+}
+.date {
+  margin: 0;
+  color: var(--muted);
+}
+.today-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.today-icon {
+  width: 96px;
+  height: 96px;
+}
+.today-meta p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.section-title {
+  margin: 0 0 0.5rem 0;
+  color: var(--muted);
+}
+
+.hours-scroll {
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.hoursBox {
+  display: flex;
+  gap: 0.75rem;
+  padding: 6px;
+}
 .hourBox {
-  padding: 1px;
+  min-width: 100px;
+  background: var(--card-bg);
+  border-radius: 10px;
+  padding: 0.6rem;
+  text-align: center;
+  scroll-snap-align: center;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+.hourBox:hover {
+  /* animations disabled - override provided below */
 }
 .hourBox p {
   margin: 0;
-  padding: 4px;
-}
-/* HOURS */
-.hoursBox {
-  flex-flow: nowrap row;
+  color: var(--muted);
+  font-size: 0.95rem;
 }
 
-/*  */
+/* HOURS horizontal list (uses .boxDay in Hours component) */
+/* HOURS: horizontal slider */
+.hours-list {
+  display: flex;
+  gap: 0.6rem;
+  overflow-x: auto;
+  padding: 8px 4px;
+  scroll-snap-type: x mandatory;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+}
+.hours-list .boxDay {
+  flex: 0 0 auto;
+  min-width: 120px;
+  max-width: 140px;
+  scroll-snap-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+/* FIVE DAYS: horizontal scroller by default but separate block so behavior can change independently */
+
+.five-days-list {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+  overflow-x: auto;
+  padding: 6px 8px;
+  scroll-snap-type: x mandatory;
+  white-space: nowrap;
+}
+.five-days-list .boxDay {
+  flex: 0 0 auto;
+  min-width: 180px;
+  max-width: 250px;
+  scroll-snap-align: center;
+  margin: 0;
+  padding: 0.6rem;
+  border: 1px solid rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+  background: var(--card-bg);
+}
+
+/* scrollbar minimal styling */
+.hours-list::-webkit-scrollbar,
+.five-days-list::-webkit-scrollbar,
+.hours-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+.hours-list::-webkit-scrollbar-thumb,
+.five-days-list::-webkit-scrollbar-thumb,
+.hours-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 899px) {
+  .weather-page {
+    padding: 1rem 0.6rem;
+  }
+  .weather-grid {
+    padding: 0 0.4rem;
+  }
+  .today-left .temp {
+    font-size: 2.4rem;
+  }
+  .weather-main {
+    grid-template-columns: 1fr;
+  }
+  .five-days-list .boxDay {
+    min-width: 120px;
+    max-width: 140px;
+  }
+}
+
+@media (min-width: 900px) {
+  .five-days-list {
+    /* keep horizontal but allow larger cards */
+  }
+  .hours-list .boxDay {
+    min-width: 140px;
+  }
+}
+
+.five-days-card .five-days-list {
+  gap: 0.6rem;
+}
+.five-days-list .boxDay {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  margin: 0;
+  padding: 0.6rem;
+  background: var(--card-bg);
+  border-radius: 10px;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.boxDay img {
+  width: 48px;
+}
+
+.hours-list .boxDay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.6rem;
+  flex: 0 0 auto;
+  min-width: 120px;
+  max-width: 160px;
+}
+
+.five-days-list .boxDay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.6rem;
+  flex: 0 0 auto;
+  min-width: 200px;
+  max-width: 200px;
+}
+.boxDay .box-icon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  margin: 4px 0;
+}
+.boxDay .hour-time,
+.boxDay .day-name {
+  color: var(--muted);
+  margin: 0;
+  font-weight: 600;
+}
+.boxDay .hour-temp,
+.boxDay .day-temp {
+  margin: 6px 0 0 0;
+  font-weight: 700;
+}
+.boxDay .hour-humidity {
+  margin: 4px 0 0 0;
+  color: var(--muted);
+}
+
+/* Disable hover animations for hours items (separated) */
+.hourBox,
+.hours-list .boxDay {
+  transition: none !important;
+}
+.hourBox:hover,
+.hours-list .boxDay:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Disable hover animations for five-days items (separated) */
+.five-days-list .boxDay {
+  transition: none !important;
+}
+.five-days-list .boxDay:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.weather-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40vh;
+  color: var(--muted);
+}
+
+@media (min-width: 900px) {
+  /* usar una sola columna para que todas las secciones ocupen el mismo ancho */
+  .weather-main {
+    grid-template-columns: 1fr;
+    grid-auto-rows: min-content;
+  }
+
+  /* asegurar que las tres secciones ocupen todo el ancho del grid */
+  .today-card,
+  .hours-card,
+  .five-days-card {
+    grid-column: 1 / -1;
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.28s ease;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hours-skeleton {
+  display: flex;
+  gap: 0.6rem;
+}
+.hour-skel {
+  width: 92px;
+  height: 82px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.06));
+  animation: skel 1.2s infinite;
+}
+@keyframes skel {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}

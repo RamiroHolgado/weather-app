@@ -3,15 +3,21 @@ import "../assets/css/PageDay.css";
 
 export default function PageDay() {
   return (
-    <>
-      <h3>mie</h3>
-      <h1>10</h1>
-      <img src="" alt="img" />
-      <p>desc</p>
-      <div>
-        <h6>humedad</h6>
-        <h6>indice uv</h6>
+    <div className="page-day">
+      <div className="day-card">
+        <div className="day-left">
+          <h1>Miércoles</h1>
+          <p className="big-temp">10°</p>
+          <p>Parcialmente nublado · Sensación 9°</p>
+        </div>
+        <div className="day-right">
+          <img src="" alt="icon" style={{ width: 96, height: 96 }} />
+          <div>
+            <p>Humedad: 78%</p>
+            <p>Índice UV: 3</p>
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -2,59 +2,54 @@ import React from "react";
 import Day from "./Day";
 import { Link } from "react-router-dom";
 
-export default function FiveDays(props) {
+export default function FiveDays({ list }) {
+  if (!list || !list.length) return null;
+
   const days = [
+    "Domingo",
     "Lunes",
     "Martes",
     "Miercoles",
     "Jueves",
     "Viernes",
     "Sabado",
-    "Domingo",
   ];
 
-  let day = props.list[0].dt_txt.slice(0, 10);
-  let max = -1;
-  let min = 999;
-
-  const componentDay = (item, i) => {
-    // temp max, min x dia
-    if (day === item.dt_txt.slice(0, 10)) {
-      if (item.main.temp_min < min) {
-        min = item.main.temp_min;
-        // console.log(`${day} min ${min}`);
-      }
-      if (item.main.temp_max > max) {
-        max = item.main.temp_max;
-        // console.log(`${day} max ${max}`);
-      }
+  const groups = {};
+  list.forEach((item) => {
+    const date = item.dt_txt.slice(0, 10);
+    if (!groups[date]) {
+      groups[date] = {
+        max: item.main.temp_max,
+        min: item.main.temp_min,
+        icon: item.weather?.[0]?.icon,
+      };
     } else {
-      let currentMax = max;
-      let currentMin = min;
-      let currentDay = new Date(day);
-      day = item.dt_txt.slice(0, 10);
-      max = -1;
-      min = 999;
-      return (
-        <Day
-          day={days[currentDay.getDay()]}
-          icon={item.weather[0].icon}
-          max={currentMax}
-          min={currentMin}
-          key={i}
-        />
-      );
+      groups[date].max = Math.max(groups[date].max, item.main.temp_max);
+      groups[date].min = Math.min(groups[date].min, item.main.temp_min);
+      // prefer midday icon if available
+      const hour = parseInt(item.dt_txt.slice(11, 13), 10);
+      if (hour >= 11 && hour <= 13) groups[date].icon = item.weather?.[0]?.icon;
     }
-  };
+  });
+
+  const dates = Object.keys(groups).slice(0, 5);
+
   return (
-    <>
-      <Link to="/day" className="d-flex">
-        {props.list.map((item, i) => {
-          if (day !== "") {
-            return componentDay(item, i);
-          }
-        })}
-      </Link>
-    </>
+    <div className="five-days-list">
+      {dates.map((d, i) => {
+        const info = groups[d];
+        const dayName = days[new Date(d).getDay()];
+        return (
+          <Day
+            key={d}
+            day={dayName}
+            icon={info.icon}
+            max={info.max}
+            min={info.min}
+          />
+        );
+      })}
+    </div>
   );
 }

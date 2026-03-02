@@ -1,3 +1,10 @@
-Setup:
+# Weather app
 
-- run `npm i && npm start`
+- `npm i && npm start`
+
+#
+
+![alt text](img/home.png)
+![alt text](img/weather.png)
+![alt text](img/weather_light.png)
+e
