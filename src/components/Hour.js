@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Hour(props) {
   const formatHour = () => {
     let hs = parseInt(props.hour.slice(11, 16)) - 3;

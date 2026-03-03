@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../assets/css/PageHome.css";
 import { useNavigate } from "react-router-dom";
+const apiKey = process.env.REACT_APP_API_KEY;
 
 function PageHome(props) {
   const history = useNavigate();
@@ -12,7 +13,7 @@ function PageHome(props) {
     setLoading(true);
     try {
       const res = await fetch(
-        `https://api.openweathermap.org/geo/1.0/direct?q=${busqueda}&limit=1&appid=e13a4de7d97c9fd3717863271561b6a6`,
+        `https://api.openweathermap.org/geo/1.0/direct?q=${busqueda}&limit=1&appid=${apiKey}`,
       ).then((r) => r.json());
       props.setCoords(res);
     } catch (error) {

@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Hours({ list }) {
   if (!list || !list.length) return null;
 

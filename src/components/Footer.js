@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Footer() {
   return (
     <footer
@@ -10,7 +8,7 @@ export default function Footer() {
         color: "var(--muted)",
       }}
     >
-      <small>© {new Date().getFullYear()} Weather App — Hecho con ❤️</small>
+      <small>© {new Date().getFullYear()} Weather App</small>
     </footer>
   );
 }

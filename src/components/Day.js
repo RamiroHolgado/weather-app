@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Day(props) {
   const createIconUrl = () => {
     return `http://openweathermap.org/img/wn/${props.icon}@2x.png`;

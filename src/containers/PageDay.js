@@ -1,4 +1,3 @@
-import React from "react";
 import "../assets/css/PageDay.css";
 
 export default function PageDay() {

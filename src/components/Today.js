@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Today({ weather, city }) {
   if (!weather || !weather.main) return null;
 

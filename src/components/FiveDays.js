@@ -1,6 +1,4 @@
-import React from "react";
 import Day from "./Day";
-import { Link } from "react-router-dom";
 
 export default function FiveDays({ list }) {
   if (!list || !list.length) return null;

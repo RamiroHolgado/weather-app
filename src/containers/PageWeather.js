@@ -4,6 +4,7 @@ import "../assets/css/PageWeather.css";
 import Today from "../components/Today";
 import Hours from "../components/Hours";
 import FiveDays from "../components/FiveDays";
+const apiKey = process.env.REACT_APP_API_KEY;
 
 export default function PageWeather(props) {
   const [weather, setWeather] = useState({});
@@ -35,7 +36,7 @@ export default function PageWeather(props) {
     const controller = new AbortController();
     abortRef.current = controller;
 
-    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&lang=es&appid=e13a4de7d97c9fd3717863271561b6a6`;
+    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&lang=es&appid=${apiKey}`;
     setLoading(true);
     fetch(url, { signal: controller.signal })
       .then((res) => res.json())
